@@ -1,3 +1,9 @@
 [submodule "lib/RtAudioWrapper"]
 	path = lib/RtAudioWrapper
 	url = https://github.com/kooBH/RtAudioWrapper.git
+[submodule "bin"]
+	path = bin
+	url = https://github.com/kooBH/QtBin.git
+[submodule "lib/WAV"]
+	path = lib/WAV
+	url = https://github.com/koobh/WAV
