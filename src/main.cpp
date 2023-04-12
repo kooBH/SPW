@@ -1,12 +1,33 @@
+#include <QApplication>
+
 #include "RtInput.h"
 #include "WAV.h"
+#include "WSPW.h"
 
 
 /*
 Test 
 */
-int main() {
+int main(int argc, char* argv[]) {
+  //path to dll 
+  QCoreApplication::addLibraryPath(".");
 
+  //path to so
+  QCoreApplication::addLibraryPath("../lib");
+  //QCoreApplication::addLibraryPath("../lib/platfrominputcontexts");
+
+  QApplication app(argc, argv);
+
+  printf("Loading....\n");
+  WSPW spw;
+
+  app.setWindowIcon(QIcon("../resource/record.ico"));
+
+  spw.show();
+
+  return app.exec();
+
+  /*
   int device_1 = 8;
   int device_2 = 9;
 
@@ -56,6 +77,7 @@ int main() {
   }
 
   out.Finish();
+  */
 
   return 0;
 }

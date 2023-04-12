@@ -1,0 +1,14 @@
+{
+  "name": "spw",
+  "version-string": "unversioned",
+  "homepage": "https://github.com/kooBH/SPW",
+  "description": "Speech Processing Window(Streaming Speech enhancement and Speech-to-Text system for Otolaryngology reception counter)",
+  "dependencies": [
+    {
+      "name": "google-cloud-cpp",
+      "default-features": false,
+      "features": ["speech"]
+    },
+    "boost-program-options"
+  ]
+}

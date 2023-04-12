@@ -7,3 +7,9 @@
 [submodule "lib/WAV"]
 	path = lib/WAV
 	url = https://github.com/koobh/WAV
+[submodule "lib/SSTT_wrapper"]
+	path = lib/SSTT_wrapper
+	url = https://github.com/kooBH/SSTT_wrapper.git
+[submodule "lib/jsonConfig"]
+	path = lib/jsonConfig
+	url = https://github.com/kooBH/jsonConfig.git
