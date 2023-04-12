@@ -15,7 +15,7 @@ lib/vcpkg/bootstrap-vcpkg.bat
 
 + windows
 ```
-cmake -S. -B.bin "-DCMAKE_TOOLCHAIN_FILE=lib/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake -S. -B bin "-DCMAKE_TOOLCHAIN_FILE=<path-to-vcpkg>/vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build .build
 ```
 
