@@ -40,7 +40,6 @@ public :
   WSSTT(QWidget *parent = 0);
   ~WSSTT();
 
-
   void Request();
 
 public slots:

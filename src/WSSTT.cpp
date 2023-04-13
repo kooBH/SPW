@@ -49,7 +49,10 @@ WSSTT::~WSSTT() {
 }
 
 void WSSTT::Run() {
+  btn_run.setEnabled(false);
   //TODO : thread-safe protections
+  is_running = true;
+
 
   jsonConfig input(_CONFIG_JSON, "input");
   int device_1 = input["device_1"];
@@ -67,7 +70,7 @@ void WSSTT::Run() {
   std::thread t2(&WSSTT::Recording, this);
   t1.detach();
   t2.detach();
-
+  btn_run.setEnabled(true);
 }
 
 void WSSTT::Recording() {
@@ -80,6 +83,7 @@ void WSSTT::Recording() {
       // Send Request
         sstt->Write(buf_req, size_request);
 
+        // TODO more concurrent routine
         label_recog.setText(QString::fromUtf8(sstt->GetTranscript().c_str()));
 
         // Relocate request buffer
@@ -87,9 +91,7 @@ void WSSTT::Recording() {
       }
     }
   }
-
   printf("WSSTT::Recording()::End\n");
-
 }
 
 
@@ -98,11 +100,17 @@ void WSSTT::UpdateLabel(std::string str) {
 }
 
 void WSSTT::Stop() {
+  btn_run.setEnabled(false);
   input_1->Stop();
+  input_1->Clear();
   while (input_1->IsRunning());
   sstt->Finish();
-  delete sstt;
+
   delete input_1;
+  delete sstt;
+
+  is_running = false;
 
 
+  btn_run.setEnabled(true);
 }
