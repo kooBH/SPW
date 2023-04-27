@@ -21,7 +21,8 @@ private :
   int size_request = 32*1024;
   int size_buf = 512;
   int device_1, device_2;
-  int sr = 16000;
+  //int sr = 16000;
+  int sr = 48000;
 
   bool is_running=false;
 

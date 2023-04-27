@@ -10,11 +10,23 @@ set(COMPILE_OPTION)
 set(SRC_Qt_MOC)
 set(SRC_Qt)
 
+
+# For Raspberry Pi 4
+if(NOT MSVC)
+	EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+	message( STATUS "Architecture: ${ARCHITECTURE}" )
+
+	if(${ARCHITECTURE} STREQUAL "aarch64")
+		SET(AARCH64 TRUE)
+	endif()
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/lib/RtAudioWrapper/RtAudio.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/lib/RtAudioWrapper/Libsamplerate.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/lib/WAV/WAV.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/lib/SSTT_wrapper/SSTT.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/lib/jsonConfig/jsonConfig.cmake)
+
 
 # Sources to be compiled by MOC
 list(APPEND SRC_Qt_MOC
@@ -59,12 +71,10 @@ file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/tmp)
 		string(REPLACE "." ";" parse_i_3 ${parse_i_2})
 		LIST(GET parse_i_3 0 fisrt_element)
 		
-		if(MSVC)
-			execute_process(
+		execute_process(
 			COMMAND moc ${i} -o ${PROJECT_SOURCE_DIR}/tmp/moc_${fisrt_element}.cpp
 			WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin  
 			 )
-		endif()
 		
 		list(APPEND SRC_Qt
 			tmp/moc_${fisrt_element}.cpp
@@ -94,6 +104,7 @@ endif()
 
 list(APPEND SRC ${SRC_Qt} ${SRC_Qt_MOC})
 
+if(NOT AARCH64)
 list(APPEND INCL
 	src
 	tmp
@@ -106,9 +117,34 @@ list(APPEND INCL
 	bin/include/QtOpenGL
 	bin/include/QtOpenGLWidgets
 )
+else()
+list(APPEND INCL
+	src
+	tmp
+
+	/usr/include/aarch64-linux-gnu/qt5/
+	/usr/include/aarch64-linux-gnu/qt5/QtCore/
+	/usr/include/aarch64-linux-gnu/qt5/QtGui/
+	/usr/include/aarch64-linux-gnu/qt5/QtWidgets/
+)
+
+endif()
 
 ## QtFramework ##
-if(UNIX AND NOT APPLE)
+if(AARCH64)
+  list(APPEND LINKLIBS
+		Qt5Core
+		Qt5Widgets
+		Qt5Gui
+
+		Qt5XcbQpa
+	)
+  list(APPEND COMPILE_OPTION
+      -fPIC
+    )
+
+elseif(UNIX AND NOT APPLE)
+ message( FATAL_ERROR "Not implemented for generic UNIX" )
   list(APPEND LINKLIBS
 	)
   list(APPEND COMPILE_OPTION

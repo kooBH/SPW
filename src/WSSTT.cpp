@@ -59,7 +59,7 @@ void WSSTT::Run() {
   idx_buf = 0;
 
   //Run Streaming Speach-to-Text
-  sstt = new SSTT("ko-KR", 16000, size_request);
+  sstt = new SSTT("ko-KR", sr, size_request);
   sstt->Run();
   std::thread t1(&SSTT::Read, sstt);
 
