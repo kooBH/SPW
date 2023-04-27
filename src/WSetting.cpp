@@ -1,21 +1,23 @@
 #include "WSetting.h"
 
-
 WSetting::WSetting(QWidget* parent)
   : QWidget(parent), btn_reprobe("Audio Probe") {
-
   AudioProbe();
 
   TB_device.setText(text_device);
   base_layout.addWidget(&btn_reprobe);
 
-  layout_1.addWidget(&label_1);
-  layout_1.addWidget(&combo_1);
+  layout_1.addWidget(&label_mic_1);
+  layout_1.addWidget(&combo_mic_1);
+  layout_1.addWidget(&label_sr_1);
+  layout_1.addWidget(&combo_sr_1);
   layout_1.setAlignment(Qt::AlignLeft);
   base_layout.addLayout(&layout_1);
 
-  layout_2.addWidget(&label_2);
-  layout_2.addWidget(&combo_2);
+  layout_2.addWidget(&label_mic_2);
+  layout_2.addWidget(&combo_mic_2);
+  layout_2.addWidget(&label_sr_2);
+  layout_2.addWidget(&combo_sr_2);
   layout_2.setAlignment(Qt::AlignLeft);
   base_layout.addLayout(&layout_2);
 
@@ -27,8 +29,17 @@ WSetting::WSetting(QWidget* parent)
 
   setLayout(&base_layout);
 
-  label_1.setText("MIC 1");
-  label_2.setText("MIC 2");
+  label_mic_1.setText("MIC 1");
+  label_sr_1.setText("SR 1");
+  label_mic_2.setText("MIC 2");
+  label_sr_2.setText("SR 2");
+
+  combo_sr_1.addItem("16000");
+  combo_sr_1.addItem("48000");
+
+  combo_sr_2.addItem("16000");
+  combo_sr_2.addItem("48000");
+
 
   QObject::connect(&btn_reprobe, &QPushButton::clicked,
     [&]() {
@@ -38,7 +49,7 @@ WSetting::WSetting(QWidget* parent)
     }
   );
 
-  QObject::connect(&combo_1, &QComboBox::currentTextChanged,
+  QObject::connect(&combo_mic_1, &QComboBox::currentTextChanged,
     [&](const QString& item) {
       std::ifstream ifs(_CONFIG_JSON);
       json jj = json::parse(ifs);
@@ -51,13 +62,39 @@ WSetting::WSetting(QWidget* parent)
     }
   );
 
-  QObject::connect(&combo_2, &QComboBox::currentTextChanged,
+  QObject::connect(&combo_mic_2, &QComboBox::currentTextChanged,
     [&](const QString& item) {
       std::ifstream ifs(_CONFIG_JSON);
       json jj = json::parse(ifs);
       ifs.close();
 
       jj["input"]["device_2"] = std::stoi(mid_num_str(item.toStdString()));
+      std::ofstream ofs(_CONFIG_JSON);
+      ofs << jj.dump(4);
+      ofs.close();
+    }
+  );
+
+  QObject::connect(&combo_sr_1, &QComboBox::currentTextChanged,
+    [&](const QString& item) {
+      std::ifstream ifs(_CONFIG_JSON);
+      json jj = json::parse(ifs);
+      ifs.close();
+
+      jj["input"]["samplerate_1"] = std::stoi(item.toStdString());
+      std::ofstream ofs(_CONFIG_JSON);
+      ofs << jj.dump(4);
+      ofs.close();
+    }
+  );
+
+  QObject::connect(&combo_sr_2, &QComboBox::currentTextChanged,
+    [&](const QString& item) {
+      std::ifstream ifs(_CONFIG_JSON);
+      json jj = json::parse(ifs);
+      ifs.close();
+
+      jj["input"]["samplerate_2"] = std::stoi(item.toStdString());
       std::ofstream ofs(_CONFIG_JSON);
       ofs << jj.dump(4);
       ofs.close();
@@ -76,8 +113,10 @@ WSetting::WSetting(QWidget* parent)
   json j = json::parse(ifs);
   ifs.close();
 
-  combo_1.setCurrentIndex(j["input"]["device_1"].get<int>());
-  combo_2.setCurrentIndex(j["input"]["device_2"].get<int>());
+  combo_mic_1.setCurrentIndex(j["input"]["device_1"].get<int>());
+  combo_mic_2.setCurrentIndex(j["input"]["device_2"].get<int>());
+  combo_sr_1.setCurrentText(QString::number(j["input"]["samplerate_1"].get<int>()));
+  combo_sr_2.setCurrentText(QString::number(j["input"]["samplerate_2"].get<int>()));
 }
 
 WSetting::~WSetting(){
@@ -156,28 +195,28 @@ void WSetting::AudioProbe() {
   text_device.append("\n");
 
   /*** ReCreate Combobox for input device ***/
-  int cnt_1 = combo_1.count();
-  int cnt_2 = combo_2.count();
+  int cnt_1 = combo_mic_1.count();
+  int cnt_2 = combo_mic_2.count();
   int idx_1 = 0;
   int idx_2 = 0;
   //combo.clear();
   for (auto it = map_device.begin(); it != map_device.end(); it++) {
     if (idx_1 < cnt_1)
-      combo_1.setItemText(idx_1, QString::fromStdString(it->first));
+      combo_mic_1.setItemText(idx_1, QString::fromStdString(it->first));
     else
-      combo_1.addItem(QString::fromStdString(it->first));
+      combo_mic_1.addItem(QString::fromStdString(it->first));
 
     if (idx_2 < cnt_2)
-      combo_2.setItemText(idx_2, QString::fromStdString(it->first));
+      combo_mic_2.setItemText(idx_2, QString::fromStdString(it->first));
     else
-      combo_2.addItem(QString::fromStdString(it->first));
+      combo_mic_2.addItem(QString::fromStdString(it->first));
 
     idx_1++;
     idx_2++;
   }
 
   for (int i = 0; i < cnt_1 - idx_1; i++)
-    combo_1.removeItem(idx_1);
+    combo_mic_1.removeItem(idx_1);
   for (int i = 0; i < cnt_2 - idx_2; i++)
-    combo_2.removeItem(idx_2);
+    combo_mic_2.removeItem(idx_2);
 }

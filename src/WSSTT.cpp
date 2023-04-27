@@ -56,10 +56,11 @@ void WSSTT::Run() {
 
   jsonConfig input(_CONFIG_JSON, "input");
   int device_1 = input["device_1"];
+  int sr_1 = input["samplerate_1"];
   idx_buf = 0;
 
   //Run Streaming Speach-to-Text
-  sstt = new SSTT("ko-KR", sr, size_request);
+  sstt = new SSTT("ko-KR", sr_1, size_request);
   sstt->Run();
   std::thread t1(&SSTT::Read, sstt);
 
