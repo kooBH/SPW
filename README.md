@@ -3,8 +3,15 @@ Speech Processing Window(Streaming Speech enhancement and Speech-to-Text system 
 
 ## Dependecy
 
+### Raspberry-pi
+
+see https://github.com/kooBH/SPW/issues/1  and https://github.com/kooBH/SPW/issues/2  
+
 ### vcpkg
 + linux  
+```
+lib/vcpkg/bootstrap-vcpkg.sh
+```
 
 + windows
 ```
@@ -15,7 +22,7 @@ lib/vcpkg/bootstrap-vcpkg.bat
 
 + windows
 ```
-cmake -S. -B bin "-DCMAKE_TOOLCHAIN_FILE=<path-to-vcpkg>/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake -S. -B bin "-DCMAKE_TOOLCHAIN_FILE=<absolute-path-to-vcpkg>/vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build .build
 ```
 
