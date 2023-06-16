@@ -40,9 +40,10 @@ private :
 
   inline std::string mid_num_str(const std::string& s) {
 
-    if (!s.compare(""))
+    if (!s.compare("")){
       printf("WSetting::mid_num_str()::Item not selected. Using default index 0\n");
       return "0";
+    }
 
     std::string::size_type p = s.find('[');
     std::string::size_type pp = s.find(']', p + 2);

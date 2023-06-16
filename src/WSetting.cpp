@@ -55,6 +55,8 @@ WSetting::WSetting(QWidget* parent)
       json jj = json::parse(ifs);
       ifs.close();
 
+      printf("selected : %s | %d\n", item.toStdString().c_str(),std::stoi(mid_num_str(item.toStdString())));
+
       jj["input"]["device_1"] = std::stoi(mid_num_str(item.toStdString()));
       std::ofstream ofs(_CONFIG_JSON);
       ofs << jj.dump(4);

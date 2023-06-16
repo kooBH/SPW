@@ -13,3 +13,6 @@
 [submodule "lib/jsonConfig"]
 	path = lib/jsonConfig
 	url = https://github.com/kooBH/jsonConfig.git
+[submodule "lib/vcpkg"]
+	path = lib/vcpkg
+	url = https://github.com/microsoft/vcpkg.git
